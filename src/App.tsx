@@ -14,13 +14,13 @@ export default function App() {
   const canvasDigitalRef = useRef<HTMLCanvasElement>(null);
 
   return (
-    <div className="w-full max-w-[1200px] bg-[#161719] border-2 border-[#25272a] rounded shadow-2xl flex flex-col overflow-hidden">
+    <div className="w-full h-full bg-[#161719] flex flex-col overflow-hidden">
       
       <Header error={state.error} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] min-h-[600px]">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[340px_1fr] overflow-hidden">
         {/* Panel Lateral de Controles */}
-        <aside className="p-6 bg-[#131416] border-r-0 lg:border-r-2 border-[#25272a] flex flex-col gap-6">
+        <aside className="p-6 bg-[#131416] border-r-0 lg:border-r-2 border-[#25272a] flex flex-col gap-6 overflow-y-auto">
           <InputControls
             activeInput={state.activeInput}
             loading={state.loading}
@@ -52,7 +52,7 @@ export default function App() {
         </aside>
 
         {/* Panel Derecho: Osciloscopios */}
-        <main className="p-6 flex flex-col gap-6 bg-[#0a0b0d]">
+        <main className="p-6 flex flex-col gap-6 bg-[#0a0b0d] overflow-y-auto">
           <Oscilloscope
             title="Señal Analógica Original (Continua)"
             subtitle="Voltaje vs Tiempo"

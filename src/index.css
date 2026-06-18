@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html, body, #root {
+    @apply h-screen w-screen overflow-hidden bg-[#050607];
+    margin: 0;
+    padding: 0;
+  }
+}
 /* Estilos globales rápidos para el slider de volumen/frecuencia */
 input[type="range"] {
   -webkit-appearance: none;

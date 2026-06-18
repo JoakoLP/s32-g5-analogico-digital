@@ -150,8 +150,9 @@ export function Oscilloscope({
     render();
 
     const handleResize = () => {
-      if (canvasRef.current) {
-        canvasRef.current.width = canvasRef.current.parentElement?.clientWidth || 600;
+      if (canvasRef.current && canvasRef.current.parentElement) {
+        canvasRef.current.width = canvasRef.current.parentElement.clientWidth;
+        canvasRef.current.height = canvasRef.current.parentElement.clientHeight;
       }
     };
     handleResize();
@@ -164,7 +165,7 @@ export function Oscilloscope({
   }, [canvasRef, color, isDigital, samplingRate, signal]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 flex-1 min-h-[220px]">
       <div className="flex justify-between items-center">
         <span className="font-mono text-[10px] text-slate-500 uppercase tracking-wider">
           {title}
@@ -180,8 +181,8 @@ export function Oscilloscope({
           </span>
         </div>
       </div>
-      <div className="bg-[#050607] border border-[#1e2226] rounded overflow-hidden">
-        <canvas ref={canvasRef} className="w-full h-[180px]" />
+      <div className="bg-[#050607] border border-[#1e2226] rounded overflow-hidden flex-1 flex">
+        <canvas ref={canvasRef} className="w-full h-full min-h-[180px]" />
       </div>
     </div>
   );
