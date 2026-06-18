@@ -18,6 +18,7 @@ venv/
 env/
 __pycache__/
 *.py[cod]
+docs
 
 # Editor directories and files
 .vscode/*

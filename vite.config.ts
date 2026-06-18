@@ -5,6 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    watch: {
+      ignored: ['**/docs/**']
+    },
     proxy: {
       // Redirige las peticiones locales de /api al puerto del backend de Python
       '/api': {

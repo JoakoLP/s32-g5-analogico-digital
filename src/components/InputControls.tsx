@@ -80,11 +80,11 @@ export function InputControls({
           <input
             type="range"
             min={100}
-            max={2200}
-            step={20}
+            max={2500}
+            step={10}
             value={waveFreq}
             onChange={(e) => setWaveFreq(parseInt(e.target.value))}
-            className="w-full accent-[#00e676]"
+            className="analog-slider"
           />
         </div>
       )}

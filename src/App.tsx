@@ -74,13 +74,43 @@ export default function App() {
           />
 
           {/* Panel Teórico de la Cátedra */}
-          <div className="mt-auto bg-[#131416] border border-[#25272a] rounded p-4 flex flex-col gap-3">
-            <h3 className="font-mono text-[10px] text-slate-400 uppercase tracking-wider">
-              Diagnóstico y Análisis de Nyquist (Comunicaciones FRLP)
+          <div className="mt-auto bg-[#131416] border border-[#25272a] rounded p-5 flex flex-col gap-4">
+            <h3 className="font-mono text-[11px] text-slate-400 uppercase tracking-widest border-b border-[#25272a] pb-2">
+              Soporte Teórico y Fórmulas del Sistema
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              El Teorema de Muestreo de Nyquist-Shannon establece que la frecuencia de muestreo $F_s$ debe ser estrictamente mayor al doble de la componente de frecuencia más alta de la señal original ($F_s &gt; 2 \cdot F_m$) para prevenir la superposición de espectros (aliasing). En este simulador, con una frecuencia de entrada de <strong className="text-[#00e676]">{state.waveFreq} Hz</strong>, requieres un muestreo de al menos <strong className="text-[#ffa726]">{(state.waveFreq * 2 / 1000).toFixed(2)} kHz</strong>.
-            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-400 leading-relaxed">
+              <div>
+                <strong className="text-slate-300">1. Teorema de Nyquist-Shannon:</strong><br/>
+                La frecuencia de muestreo debe ser estrictamente mayor al doble de la frecuencia fundamental de la señal original para evitar el <i>aliasing</i>.<br/>
+                <code className="bg-[#0a0b0d] px-1.5 py-0.5 rounded border border-[#1e2226] mt-1.5 block w-fit">F_s &gt; 2 · F_m</code>
+              </div>
+              
+              <div>
+                <strong className="text-slate-300">2. Niveles de Cuantización (L):</strong><br/>
+                Es la cantidad de escalones de voltaje discretos que el ADC puede representar, definidos por la profundidad de bits.<br/>
+                <code className="bg-[#0a0b0d] px-1.5 py-0.5 rounded border border-[#1e2226] mt-1.5 block w-fit">L = 2^b</code>
+              </div>
+
+              <div>
+                <strong className="text-slate-300">3. Tasa de Bits del Canal (R):</strong><br/>
+                Es la velocidad de transmisión de datos necesaria para enviar la señal PCM sin compresión.<br/>
+                <code className="bg-[#0a0b0d] px-1.5 py-0.5 rounded border border-[#1e2226] mt-1.5 block w-fit">R = F_s · b</code>
+              </div>
+
+              <div>
+                <strong className="text-slate-300">4. Relación Señal/Ruido de Cuantización (SQNR):</strong><br/>
+                Mide la calidad de la señal frente al ruido introducido por el ADC. Cada bit extra suma ~6 dB al margen dinámico.<br/>
+                <code className="bg-[#0a0b0d] px-1.5 py-0.5 rounded border border-[#1e2226] mt-1.5 block w-fit">SQNR ≈ 6.02 · b + 1.76 dB</code>
+              </div>
+            </div>
+
+            <div className="bg-[rgba(255,167,38,0.05)] border border-[#ffa726]/20 p-3 rounded mt-2">
+              <strong className="text-[#ffa726] font-mono text-[10px] uppercase">Diagnóstico en Tiempo Real:</strong><br/>
+              <span className="text-xs text-slate-300">
+                Con una frecuencia base actual de <strong className="text-[#00e676]">{state.waveFreq} Hz</strong>, se requiere un muestreo mínimo estricto de <strong className="text-[#ffa726]">{(state.waveFreq * 2 / 1000).toFixed(2)} kHz</strong>. Tienes configurada una F_s de {state.samplingRate.toFixed(1)} kHz, resultando en una Tasa de Datos de canal de {state.bitrate.toFixed(1)} kbps.
+              </span>
+            </div>
           </div>
         </main>
       </div>

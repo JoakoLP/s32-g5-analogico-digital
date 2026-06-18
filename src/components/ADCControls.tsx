@@ -32,7 +32,6 @@ export function ADCControls({
           step={0.5}
           value={samplingRate}
           onChange={(e) => setSamplingRate(parseFloat(e.target.value))}
-          className="w-full accent-[#ffa726]"
         />
       </div>
 
@@ -49,7 +48,6 @@ export function ADCControls({
           step={1}
           value={bitDepth}
           onChange={(e) => setBitDepth(parseInt(e.target.value))}
-          className="w-full accent-[#ffa726]"
         />
       </div>
     </div>
