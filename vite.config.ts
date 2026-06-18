@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/react-swc'
+import react from '@vitejs/plugin-react'
 
 // [https://vitejs.dev/config/](https://vitejs.dev/config/)
 export default defineConfig({
@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       // Redirige las peticiones locales de /api al puerto del backend de Python
       '/api': {
-        target: '[http://127.0.0.1:8000](http://127.0.0.1:8000)',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
         secure: false,
       }

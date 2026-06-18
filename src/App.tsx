@@ -56,7 +56,9 @@ export default function App() {
   // --- INICIALIZACIÓN ---
   useEffect(() => {
     // Generar datos iniciales en el buffer
-    generateSynthSamples();
+    if (activeInput === 'synth') {
+      generateSynthSamples();
+    }
 
     // Iniciar bucle de animación 60fps
     let animationId: number;
@@ -91,9 +93,15 @@ export default function App() {
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', handleResize);
-      stopAllAudioSources();
     };
   }, [activeInput, waveFreq, samplingRate, bitDepth]);
+
+  // Clean up audio sources only on unmount
+  useEffect(() => {
+    return () => {
+      stopAllAudioSources();
+    };
+  }, []);
 
   // --- OBTENER CONTEXTO DE AUDIO ---
   const getAudioContext = (): AudioContext => {
@@ -227,12 +235,10 @@ export default function App() {
       const processor = ctx.createScriptProcessor(1024, 1, 1);
 
       processor.onaudioprocess = (e) => {
-        if (activeInput === 'mic') {
-          const inputBuffer = e.inputBuffer.getChannelData(0);
-          const step = Math.floor(inputBuffer.length / originalSignal.current.length);
-          for (let i = 0; i < originalSignal.current.length; i++) {
-            originalSignal.current[i] = inputBuffer[i * step] || 0;
-          }
+        const inputBuffer = e.inputBuffer.getChannelData(0);
+        const step = Math.floor(inputBuffer.length / originalSignal.current.length);
+        for (let i = 0; i < originalSignal.current.length; i++) {
+          originalSignal.current[i] = inputBuffer[i * step] || 0;
         }
       };
 
@@ -269,12 +275,10 @@ export default function App() {
 
       const processor = ctx.createScriptProcessor(1024, 1, 1);
       processor.onaudioprocess = (e) => {
-        if (activeInput === 'file') {
-          const inputBuffer = e.inputBuffer.getChannelData(0);
-          const step = Math.floor(inputBuffer.length / originalSignal.current.length);
-          for (let i = 0; i < originalSignal.current.length; i++) {
-            originalSignal.current[i] = inputBuffer[i * step] || 0;
-          }
+        const inputBuffer = e.inputBuffer.getChannelData(0);
+        const step = Math.floor(inputBuffer.length / originalSignal.current.length);
+        for (let i = 0; i < originalSignal.current.length; i++) {
+          originalSignal.current[i] = inputBuffer[i * step] || 0;
         }
       };
 
@@ -297,9 +301,6 @@ export default function App() {
     const ctx = getAudioContext();
     setPlayingAudio(true);
 
-    synthOscRef.current = ctx.createOscillator();
-    synthOscRef.current.frequency.value = activeInput === 'synth' ? waveFreq : 350;
-
     synthCrusherRef.current = ctx.createScriptProcessor(2048, 1, 1);
     synthCrusherRef.current.onaudioprocess = (e) => {
       const input = e.inputBuffer.getChannelData(0);
@@ -321,9 +322,16 @@ export default function App() {
       }
     };
 
-    synthOscRef.current.connect(synthCrusherRef.current);
     synthCrusherRef.current.connect(ctx.destination);
-    synthOscRef.current.start();
+
+    if (activeInput === 'synth') {
+      synthOscRef.current = ctx.createOscillator();
+      synthOscRef.current.frequency.value = waveFreq;
+      synthOscRef.current.connect(synthCrusherRef.current);
+      synthOscRef.current.start();
+    } else if (sourceNodeRef.current) {
+      sourceNodeRef.current.connect(synthCrusherRef.current);
+    }
   };
 
   const stopDegradationAudio = () => {
@@ -334,6 +342,11 @@ export default function App() {
       synthOscRef.current = null;
     }
     if (synthCrusherRef.current) {
+      if (sourceNodeRef.current && activeInput !== 'synth') {
+        try {
+          sourceNodeRef.current.disconnect(synthCrusherRef.current);
+        } catch(e) {}
+      }
       synthCrusherRef.current.disconnect();
       synthCrusherRef.current = null;
     }
